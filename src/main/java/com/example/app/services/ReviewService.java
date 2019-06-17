@@ -1,7 +1,11 @@
 package com.example.app.services;
 
-import com.example.app.models.*;
-import com.example.app.repositories.*;
+import com.example.app.models.Critic;
+import com.example.app.models.Movie;
+import com.example.app.models.Review;
+import com.example.app.repositories.CriticRepository;
+import com.example.app.repositories.MovieRepository;
+import com.example.app.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

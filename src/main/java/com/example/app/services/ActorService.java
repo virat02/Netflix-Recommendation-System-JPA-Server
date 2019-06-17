@@ -1,5 +1,6 @@
 package com.example.app.services;
 
+import com.example.app.Utils;
 import com.example.app.models.Actor;
 import com.example.app.models.Fan;
 import com.example.app.models.Movie;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-public class ActorService extends Utils{
+public class ActorService extends Utils {
 
     @Autowired
     private ActorRepository actorRepository;

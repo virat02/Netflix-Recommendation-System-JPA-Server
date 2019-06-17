@@ -6,9 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -16,22 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+@RestController
+@CrossOrigin(origins = "*")
 public class MovieService {
 
     @Autowired
-    private MovieRepository movieRepository;
+    private MovieRepository movieRepo;
 
     @Autowired
-    private CriticRepository criticRepository;
+    private CriticRepository criticRepo;
 
     @Autowired
-    private FanRepository fanRepository;
+    private FanRepository fanRepo;
 
     @Autowired
-    private ReviewRepository reviewRepository;
+    private ReviewRepository reviewRepo;
 
     @Autowired
-    private ActorRepository actorRepository;
+    private ActorRepository actorRepo;
 
     // TODO: Read from application.properties
     @Value("${tmdb.api.key}")
@@ -50,42 +50,47 @@ public class MovieService {
      * @param query a String
      * @return a list of MovieSearchResults
      */
-    public static List<MovieSearchResult> searchMovies(String query) {
-        String urlString = apiBaseUri + "search/movie?api_key=" + apiKey + "&query=" + query;
+    @GetMapping("/api/search/movies")
+    public static List<MovieSearchResult> searchMovies(@RequestParam("query") String query) {
         List<MovieSearchResult> searchResults = new ArrayList<>();
 
-        HttpURLConnection conn = null;
-        try {
-            URL url = new URL(urlString);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
+        if(query.length() > 0) {
+            String urlString = apiBaseUri + "search/movie?api_key=" + apiKey +
+                    "&query=" + query.replace(" ","+");
 
-            if(conn.getResponseCode() == 200) {
-                StringBuilder responseString = new StringBuilder();
-                Scanner sc = new Scanner(url.openStream());
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(urlString);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
 
-                while(sc.hasNext()) {
-                    responseString.append(sc.nextLine());
+                if(conn.getResponseCode() == 200) {
+                    StringBuilder responseString = new StringBuilder();
+                    Scanner sc = new Scanner(url.openStream());
+
+                    while(sc.hasNext()) {
+                        responseString.append(sc.nextLine());
+                    }
+                    sc.close();
+
+                    JSONObject responseJson = new JSONObject(responseString.toString());
+                    JSONArray results = responseJson.getJSONArray("results");
+
+                    for(Object movie : results) {
+                        Integer id = ((JSONObject) movie).getInt("id");
+                        String title = ((JSONObject) movie).getString("title");
+                        String posterUrl = imageServerPath + ((JSONObject) movie).getString("poster_path");
+
+                        searchResults.add(new MovieSearchResult(id, title, posterUrl));
+                    }
                 }
-                sc.close();
-
-                JSONObject responseJson = new JSONObject(responseString.toString());
-                JSONArray results = responseJson.getJSONArray("results");
-
-                for(Object movie : results) {
-                    Integer id = ((JSONObject) movie).getInt("id");
-                    String title = ((JSONObject) movie).getString("title");
-                    String posterUrl = imageServerPath + ((JSONObject) movie).getString("poster_path");
-
-                    searchResults.add(new MovieSearchResult(id, title, posterUrl));
+            } catch(Exception e) {
+                System.out.println(e.toString());
+            } finally {
+                if(conn != null) {
+                    conn.disconnect();
                 }
-            }
-        } catch(Exception e) {
-            System.out.println(e.toString());
-        } finally {
-            if(conn != null) {
-                conn.disconnect();
             }
         }
 
@@ -97,7 +102,8 @@ public class MovieService {
      * @param id a Long
      * @return the Movie with the given id
      */
-    public static Movie findMovieById(Long id) {
+    @GetMapping("/api/movies/{id}")
+    public static Movie findMovieById(@PathVariable("id") Long id) {
         String urlString = apiBaseUri + "movie/" + id + "?api_key=" + apiKey;
         Movie movie = null;
 
@@ -143,12 +149,12 @@ public class MovieService {
     public void likeMovie(
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId) {
-        if(movieRepository.findById(movieId).isPresent()
-                && fanRepository.findById(fanRepository.findFanIdByUsername(username)).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
-            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(username)).get();
+        if(movieRepo.findById(movieId).isPresent()
+                && fanRepo.findById(fanRepo.findFanIdByUsername(username)).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
+            Fan fan = fanRepo.findById(fanRepo.findFanIdByUsername(username)).get();
             movie.likedByFan(fan);
-            movieRepository.save(movie);
+            movieRepo.save(movie);
         }
     }
 
@@ -156,10 +162,10 @@ public class MovieService {
     public Fan checkIfFanLikesMovie(
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId) {
-        if(movieRepository.findById(movieId).isPresent()
-                && fanRepository.findById(fanRepository.findFanIdByUsername(username)).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
-            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(username)).get();
+        if(movieRepo.findById(movieId).isPresent()
+                && fanRepo.findById(fanRepo.findFanIdByUsername(username)).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
+            Fan fan = fanRepo.findById(fanRepo.findFanIdByUsername(username)).get();
             List<Fan> fansWhoLike = movie.getLikedByFans();
 
             if(fansWhoLike.contains(fan))
@@ -175,12 +181,12 @@ public class MovieService {
     public void castActor(
             @PathVariable("movieId") long movieId,
             @PathVariable("actorId") long actorId){
-        if(movieRepository.findById(movieId).isPresent()
-                && actorRepository.findById(actorId).isPresent()){
-            Movie movie = movieRepository.findById(movieId).get();
-            Actor actor = actorRepository.findById(actorId).get();
+        if(movieRepo.findById(movieId).isPresent()
+                && actorRepo.findById(actorId).isPresent()){
+            Movie movie = movieRepo.findById(movieId).get();
+            Actor actor = actorRepo.findById(actorId).get();
             movie.castActors(actor);
-            movieRepository.save(movie);
+            movieRepo.save(movie);
         }
     }
 
@@ -188,12 +194,12 @@ public class MovieService {
     public void dislikeMovie(
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId) {
-        if(movieRepository.findById(movieId).isPresent()
-                && fanRepository.findById(fanRepository.findFanIdByUsername(username)).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
-            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(username)).get();
+        if(movieRepo.findById(movieId).isPresent()
+                && fanRepo.findById(fanRepo.findFanIdByUsername(username)).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
+            Fan fan = fanRepo.findById(fanRepo.findFanIdByUsername(username)).get();
             movie.dislikedByFan(fan);
-            movieRepository.save(movie);
+            movieRepo.save(movie);
         }
     }
 
@@ -201,10 +207,10 @@ public class MovieService {
     public Fan checkIfFanDislikesMovie(
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId) {
-        if(movieRepository.findById(movieId).isPresent()
-                && fanRepository.findById(fanRepository.findFanIdByUsername(username)).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
-            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(username)).get();
+        if(movieRepo.findById(movieId).isPresent()
+                && fanRepo.findById(fanRepo.findFanIdByUsername(username)).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
+            Fan fan = fanRepo.findById(fanRepo.findFanIdByUsername(username)).get();
             List<Fan> fansWhoDisliked = movie.getDislikedByFans();
 
             if(fansWhoDisliked.contains(fan))
@@ -220,12 +226,12 @@ public class MovieService {
     public void recommendMovie(
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId) {
-        if(movieRepository.findById(movieId).isPresent()
-                && criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
-            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
+        if(movieRepo.findById(movieId).isPresent()
+                && criticRepo.findById(criticRepo.findCriticIdByUsername(username)).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
+            Critic critic = criticRepo.findById(criticRepo.findCriticIdByUsername(username)).get();
             movie.recommendedByCritic(critic);
-            movieRepository.save(movie);
+            movieRepo.save(movie);
         }
     }
 
@@ -233,10 +239,10 @@ public class MovieService {
     public Critic checkIfCriticRecommendsMovie (
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId) {
-        if(movieRepository.findById(movieId).isPresent()
-                && criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
-            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
+        if(movieRepo.findById(movieId).isPresent()
+                && criticRepo.findById(criticRepo.findCriticIdByUsername(username)).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
+            Critic critic = criticRepo.findById(criticRepo.findCriticIdByUsername(username)).get();
             List<Critic> criticsWhoRecommended = movie.getRecommendedBy();
 
             if(criticsWhoRecommended.contains(critic))
@@ -252,20 +258,20 @@ public class MovieService {
     public void reviewMovie(
             @PathVariable("movieId") long movieId,
             @PathVariable("reviewId") long reviewId) {
-        if(movieRepository.findById(movieId).isPresent()
-                && reviewRepository.findById(reviewId).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
-            Review review = reviewRepository.findById(reviewId).get();
+        if(movieRepo.findById(movieId).isPresent()
+                && reviewRepo.findById(reviewId).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
+            Review review = reviewRepo.findById(reviewId).get();
             movie.hasReviews(review);
-            movieRepository.save(movie);
+            movieRepo.save(movie);
         }
     }
 
     @GetMapping("/api/recommend/movie/{movieId}/recommendedby")
     public List<Critic> listOfCriticsRecommended(
             @PathVariable("movieId") long movieId){
-        if(movieRepository.findById(movieId).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
+        if(movieRepo.findById(movieId).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
             return movie.getRecommendedBy();
         }
         return null;
@@ -274,8 +280,8 @@ public class MovieService {
     @GetMapping("/api/like/movie/{movieId}/likedbyfans")
     public List<Fan> listOfFansLikedMovie(
             @PathVariable("movieID") long movieId){
-        if(movieRepository.findById(movieId).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
+        if(movieRepo.findById(movieId).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
             return movie.getLikedByFans();
         }
         return null;
@@ -284,8 +290,8 @@ public class MovieService {
     @GetMapping("/api/dislike/movie/{movieId}/dislikedbyfans")
     public List<Fan> listOfFansDislikedMovie(
             @PathVariable("movieId") long movieId){
-        if(movieRepository.findById(movieId).isPresent()) {
-            Movie movie = movieRepository.findById(movieId).get();
+        if(movieRepo.findById(movieId).isPresent()) {
+            Movie movie = movieRepo.findById(movieId).get();
             return movie.getDislikedByFans();
         }
         return null;
@@ -294,8 +300,8 @@ public class MovieService {
     @GetMapping("/api/movie/{movieId}/reviews")
     public List<Review> listOfReviews(
             @PathVariable("movieId") long movieId){
-        if(movieRepository.findById(movieId).isPresent()){
-            Movie movie = movieRepository.findById(movieId).get();
+        if(movieRepo.findById(movieId).isPresent()){
+            Movie movie = movieRepo.findById(movieId).get();
             return movie.getMovieReview();
         }
         return null;
@@ -303,8 +309,8 @@ public class MovieService {
 
     @GetMapping("/api/movie/{movieId}/cast")
     public List<Actor> getMovieCast (@PathVariable("movieId") long movieId){
-        if(movieRepository.findById(movieId).isPresent()){
-            Movie movie = movieRepository.findById(movieId).get();
+        if(movieRepo.findById(movieId).isPresent()){
+            Movie movie = movieRepo.findById(movieId).get();
             return movie.getListOfActors();
         }
         return null;

@@ -1,4 +1,4 @@
-package com.example.app.services;
+package com.example.app;
 
 public class Utils {
 

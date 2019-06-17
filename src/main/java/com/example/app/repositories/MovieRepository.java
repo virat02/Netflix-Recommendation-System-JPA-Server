@@ -4,7 +4,9 @@ import com.example.app.models.Movie;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface MovieRepository extends CrudRepository<Movie, Long>{
 	
 	@Query("SELECT m FROM Movie m WHERE m.movieId=:movieId")
