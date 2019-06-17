@@ -1,15 +1,8 @@
 package com.example.app.services;
 
 
-import com.example.app.Utils;
-import com.example.app.models.Actor;
-import com.example.app.models.Critic;
-import com.example.app.models.Fan;
-import com.example.app.models.Movie;
-import com.example.app.repositories.ActorRepository;
-import com.example.app.repositories.CriticRepository;
-import com.example.app.repositories.FanRepository;
-import com.example.app.repositories.MovieRepository;
+import com.example.app.models.*;
+import com.example.app.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

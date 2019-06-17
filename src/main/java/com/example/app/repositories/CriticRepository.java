@@ -4,9 +4,7 @@ import com.example.app.models.Critic;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface CriticRepository extends CrudRepository<Critic, Long> {
 	
 	@Query("SELECT c FROM Critic c WHERE c.username=:username")
