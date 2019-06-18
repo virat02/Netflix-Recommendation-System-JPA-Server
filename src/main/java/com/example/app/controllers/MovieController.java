@@ -3,6 +3,7 @@ package com.example.app.controllers;
 import com.example.app.models.*;
 import com.example.app.repositories.*;
 import com.example.app.services.MovieService;
+import com.example.app.types.GetMovieType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,10 +43,59 @@ public class MovieController {
         List<MovieSearchResult> result = new ArrayList<>();
 
         if(query.length() != 0) {
-            result = MovieService.searchMovies(query.replace(" ","+"));
+            result = MovieService.getMovies(GetMovieType.SEARCH, "en-US", null,
+                    query.replace(" ","+"), "1");
         }
 
         return result;
+    }
+
+    /**
+     * Get list of Top Rated Movies from TMDb for a particular region
+     * @param region a String
+     * @return a list of MovieSearchResults
+     */
+    @GetMapping("/api/movies/top_rated")
+    List<MovieSearchResult> getTopRatedMovies(@RequestParam(value = "region", defaultValue = "us") String region,
+                                              @RequestParam(value = "lang", defaultValue = "en-US") String lang,
+                                              @RequestParam(value = "page", defaultValue = "1") String pageNo) {
+        return MovieService.getMovies(GetMovieType.TOP_RATED, lang, region, null, pageNo);
+    }
+
+    /**
+     * Get list of Now Playing Movies from TMDb for a particular region
+     * @param region a String
+     * @return a list of MovieSearchResults
+     */
+    @GetMapping("/api/movies/now_playing")
+    List<MovieSearchResult> getNowPlayingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
+                                                @RequestParam(value = "lang", defaultValue = "en-US") String lang,
+                                                @RequestParam(value = "page", defaultValue = "1") String pageNo) {
+        return MovieService.getMovies(GetMovieType.NOW_PLAYING, lang, region,null, pageNo);
+    }
+
+    /**
+     * Get list of Popular Movies from TMDb for a particular region
+     * @param region a String
+     * @return a list of MovieSearchResults
+     */
+    @GetMapping("/api/movies/popular")
+    List<MovieSearchResult> getPopularMovies(@RequestParam(value = "region", defaultValue = "us") String region,
+                                             @RequestParam(value = "lang", defaultValue = "en-US") String lang,
+                                             @RequestParam(value = "page", defaultValue = "1") String pageNo) {
+        return MovieService.getMovies(GetMovieType.POPULAR, lang, region,null, pageNo);
+    }
+
+    /**
+     * Get list of Upcoming Movies from TMDb for a particular region
+     * @param region a String
+     * @return a list of MovieSearchResults
+     */
+    @GetMapping("/api/movies/upcoming")
+    List<MovieSearchResult> getUpcomingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
+                                              @RequestParam(value = "lang", defaultValue = "en-US") String lang,
+                                              @RequestParam(value = "page", defaultValue = "1") String pageNo) {
+        return MovieService.getMovies(GetMovieType.UPCOMING, lang, region,null, pageNo);
     }
 
     /**
@@ -57,6 +107,8 @@ public class MovieController {
     Movie findMovieById(@PathVariable("id") Long id) {
         return MovieService.findMovieById(id);
     }
+
+
 
     @GetMapping("/api/movies")
     public List<Movie> findAllMovie(){
