@@ -15,17 +15,19 @@ public class User {
     protected String firstName;
     protected String lastName;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 100)
     protected String username;
     protected String password;
 
     @Column(insertable = false, updatable = false)
     protected String dtype;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 100)
     protected String email;
 
     protected String dob;
+
+    protected String description;
 
     @OneToMany(mappedBy = "AUser", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -109,6 +111,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDob() {

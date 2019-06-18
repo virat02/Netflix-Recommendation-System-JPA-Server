@@ -14,11 +14,14 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ActorController extends Utils {
 
-    @Autowired
     private ActorRepository actorRepository;
+    private FanRepository fanRepository;
 
     @Autowired
-    private FanRepository fanRepository;
+    public ActorController(ActorRepository actorRepository, FanRepository fanRepository) {
+        this.actorRepository = actorRepository;
+        this.fanRepository = fanRepository;
+    }
 
     @PostMapping("/api/actor")
     public Actor createActor(@RequestBody Actor actor) {

@@ -7,8 +7,6 @@ import javax.persistence.*;
 @Entity
 public class Fan extends User {
 
-    private String fanDescription;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="ActorsFollowed",
             joinColumns= @JoinColumn(name="fan_id", referencedColumnName="userId"),
@@ -49,14 +47,6 @@ public class Fan extends User {
 
     public Fan() {
         super();
-    }
-
-    public String getFanDescription() {
-        return fanDescription;
-    }
-
-    public void setFanDescription(String fanDescription) {
-        this.fanDescription = fanDescription;
     }
 
     public List<Actor> getActorsFollowed() {
@@ -154,7 +144,5 @@ public class Fan extends User {
                 newFan.email : this.email;
         this.dob = newFan.dob != null?
                 newFan.dob : this.dob;
-        this.fanDescription = newFan.fanDescription != null?
-                newFan.fanDescription : this.fanDescription;
     }
 }

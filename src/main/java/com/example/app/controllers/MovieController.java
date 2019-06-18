@@ -13,20 +13,22 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class MovieController {
 
-    @Autowired
     private MovieRepository movieRepository;
-
-    @Autowired
     private FanRepository fanRepository;
-
-    @Autowired
     private CriticRepository criticRepository;
-
-    @Autowired
     private ReviewRepository reviewRepository;
+    private ActorRepository actorRepository;
 
     @Autowired
-    private ActorRepository actorRepository;
+    public MovieController(MovieRepository movieRepository, FanRepository fanRepository,
+                           CriticRepository criticRepository, ReviewRepository reviewRepository,
+                           ActorRepository actorRepository) {
+        this.movieRepository = movieRepository;
+        this.fanRepository = fanRepository;
+        this.criticRepository = criticRepository;
+        this.reviewRepository = reviewRepository;
+        this.actorRepository = actorRepository;
+    }
 
     /**
      * Search TMDb for movies with the given query string

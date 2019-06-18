@@ -10,29 +10,42 @@ import com.example.app.repositories.FanRepository;
 import com.example.app.repositories.MovieRepository;
 import com.example.app.services.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class FanController extends Utils {
 
-    @Autowired
     private FanRepository fanRepository;
-
-    @Autowired
     private MovieRepository movieRepository;
-
-    @Autowired
     private ActorRepository actorRepository;
-
-    @Autowired
     private CriticRepository criticRepository;
 
-    @PostMapping("/api/fan")
-    public Fan createFan(@RequestBody Fan fan) {
-        return fanRepository.save(fan);
+    @Autowired
+    public FanController(FanRepository fanRepository, MovieRepository movieRepository, ActorRepository actorRepository,
+                         CriticRepository criticRepository) {
+        this.fanRepository = fanRepository;
+        this.movieRepository = movieRepository;
+        this.actorRepository = actorRepository;
+        this.criticRepository = criticRepository;
+    }
+
+    @PostMapping("/api/register/fan")
+    public Fan createFan(@RequestBody Fan fan, HttpServletResponse response) {
+        try {
+            response.setStatus(201);
+            return fanRepository.save(fan);
+        } catch(DataIntegrityViolationException e) {
+            response.setStatus(409);
+        }
+
+        return null;
     }
 
     @GetMapping("/api/fan")
