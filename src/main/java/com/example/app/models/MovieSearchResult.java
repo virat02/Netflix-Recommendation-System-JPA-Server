@@ -2,9 +2,9 @@ package com.example.app.models;
 
 public class MovieSearchResult {
 
-    Integer id;
-    String title;
-    String posterUrl;
+    private Integer id;
+    private String title;
+    private String posterUrl;
 
     public MovieSearchResult() { }
 
