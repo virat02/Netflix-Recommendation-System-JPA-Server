@@ -18,17 +18,19 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class FanController extends Utils {
 
-    @Autowired
     private FanRepository fanRepository;
-
-    @Autowired
     private MovieRepository movieRepository;
-
-    @Autowired
     private ActorRepository actorRepository;
+    private CriticRepository criticRepository;
 
     @Autowired
-    private CriticRepository criticRepository;
+    public FanController(FanRepository fanRepository, MovieRepository movieRepository, ActorRepository actorRepository,
+                         CriticRepository criticRepository) {
+        this.fanRepository = fanRepository;
+        this.movieRepository = movieRepository;
+        this.actorRepository = actorRepository;
+        this.criticRepository = criticRepository;
+    }
 
     @PostMapping("/api/fan")
     public Fan createFan(@RequestBody Fan fan) {

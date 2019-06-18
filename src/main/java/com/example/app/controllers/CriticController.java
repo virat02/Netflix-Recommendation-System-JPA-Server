@@ -18,17 +18,19 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class CriticController extends Utils {
 
-    @Autowired
     private CriticRepository criticRepository;
-
-    @Autowired
     private MovieRepository movieRepository;
-
-    @Autowired
     private ReviewRepository reviewRepository;
+    private FanRepository fanRepository;
 
     @Autowired
-    private FanRepository fanRepository;
+    public CriticController(CriticRepository criticRepository, MovieRepository movieRepository,
+                            ReviewRepository reviewRepository, FanRepository fanRepository) {
+        this.criticRepository = criticRepository;
+        this.movieRepository = movieRepository;
+        this.reviewRepository = reviewRepository;
+        this.fanRepository = fanRepository;
+    }
 
     @PostMapping("/api/critic")
     public Critic createCritic(@RequestBody Critic critic) {

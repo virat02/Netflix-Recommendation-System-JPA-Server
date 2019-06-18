@@ -15,14 +15,17 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ReviewController {
 
-    @Autowired
     private ReviewRepository reviewRepository;
-
-    @Autowired
     private MovieRepository movieRepository;
+    private CriticRepository criticRepository;
 
     @Autowired
-    private CriticRepository criticRepository;
+    public ReviewController(ReviewRepository reviewRepository, MovieRepository movieRepository,
+                            CriticRepository criticRepository) {
+        this.reviewRepository = reviewRepository;
+        this.movieRepository = movieRepository;
+        this.criticRepository = criticRepository;
+    }
 
     @GetMapping("/api/review")
     public List<Review> findAllReview(){

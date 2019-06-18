@@ -13,8 +13,12 @@ import javax.servlet.http.HttpSession;
 @CrossOrigin(origins = "*")
 public class UserController {
 
-    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/api/user")
     public Iterable<User> findAllUsers(@RequestParam(name = "username", required = false) String username) {

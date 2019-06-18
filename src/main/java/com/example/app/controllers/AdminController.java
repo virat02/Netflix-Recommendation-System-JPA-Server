@@ -11,26 +11,27 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class AdminController {
 
-    @Autowired
     private AdminRepository adminRepository;
-
-    @Autowired
     private ActorRepository actorRepository;
-
-    @Autowired
     private CriticRepository criticRepository;
-
-    @Autowired
     private FanRepository fanRepository;
-
-    @Autowired
     private MovieRepository movieRepository;
-
-    @Autowired
     private ReviewRepository reviewRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public AdminController(AdminRepository adminRepository, ActorRepository actorRepository,
+                           CriticRepository criticRepository, FanRepository fanRepository,
+                           MovieRepository movieRepository, ReviewRepository reviewRepository,
+                           UserRepository userRepository) {
+        this.adminRepository = adminRepository;
+        this.actorRepository = actorRepository;
+        this.criticRepository = criticRepository;
+        this.fanRepository = fanRepository;
+        this.movieRepository = movieRepository;
+        this.reviewRepository = reviewRepository;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/api/admin")
     public List<Admin> findAllAdmin(@RequestParam(name = "username", required = false) String username,
