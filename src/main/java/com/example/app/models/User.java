@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
+//@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
     @Id

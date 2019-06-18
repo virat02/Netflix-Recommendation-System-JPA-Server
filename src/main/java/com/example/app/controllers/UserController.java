@@ -3,10 +3,11 @@ package com.example.app.controllers;
 import com.example.app.models.User;
 import com.example.app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -20,5 +21,24 @@ public class UserController {
         if (username != null)
             return userRepository.findUserByUsername(username);
         return userRepository.findAll();
+    }
+
+    @PostMapping("api/login")
+    public User login(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
+        User existingUser = userRepository.findUserByCredentials(user.getUsername(), user.getPassword()).orElse(null);
+        if (existingUser != null) {
+            HttpSession session = request.getSession(true);
+            session.setAttribute("currentUser", existingUser);
+            response.setStatus(200);
+            return existingUser;
+        }
+
+        response.setStatus(204);
+        return null;
+    }
+
+    @GetMapping("api/logout")
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 }
