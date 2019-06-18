@@ -32,7 +32,7 @@ public class CriticController extends Utils {
         this.fanRepository = fanRepository;
     }
 
-    @PostMapping("/api/critic")
+    @PostMapping("/api/register/critic")
     public Critic createCritic(@RequestBody Critic critic) {
         return criticRepository.save(critic);
     }

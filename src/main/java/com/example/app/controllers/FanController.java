@@ -32,7 +32,7 @@ public class FanController extends Utils {
         this.criticRepository = criticRepository;
     }
 
-    @PostMapping("/api/fan")
+    @PostMapping("/api/register/fan")
     public Fan createFan(@RequestBody Fan fan) {
         return fanRepository.save(fan);
     }
