@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
 public class MovieController {
 
     private MovieRepository movieRepository;
@@ -23,11 +23,13 @@ public class MovieController {
     public MovieController(MovieRepository movieRepository, FanRepository fanRepository,
                            CriticRepository criticRepository, ReviewRepository reviewRepository,
                            ActorRepository actorRepository) {
+
         this.movieRepository = movieRepository;
         this.fanRepository = fanRepository;
         this.criticRepository = criticRepository;
         this.reviewRepository = reviewRepository;
         this.actorRepository = actorRepository;
+
     }
 
     /**

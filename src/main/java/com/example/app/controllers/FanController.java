@@ -19,7 +19,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
 public class FanController extends Utils {
 
     private FanRepository fanRepository;
