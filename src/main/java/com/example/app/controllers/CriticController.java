@@ -10,8 +10,10 @@ import com.example.app.repositories.MovieRepository;
 import com.example.app.repositories.ReviewRepository;
 import com.example.app.services.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -33,8 +35,15 @@ public class CriticController extends Utils {
     }
 
     @PostMapping("/api/register/critic")
-    public Critic createCritic(@RequestBody Critic critic) {
-        return criticRepository.save(critic);
+    public Critic createCritic(@RequestBody Critic critic, HttpServletResponse response) {
+        try {
+            response.setStatus(201);
+            return criticRepository.save(critic);
+        } catch(DataIntegrityViolationException e) {
+            response.setStatus(409);
+        }
+
+        return null;
     }
 
     @GetMapping("/api/critic")

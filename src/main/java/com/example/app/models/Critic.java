@@ -7,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Critic extends User{
 
-    private String criticDescription;
-    private String websiteUrl;
-
     public Critic() {
         super();
     }
@@ -43,22 +40,6 @@ public class Critic extends User{
 
     public void setRecommendedMovies(List<Movie> recommendedMovies) {
         this.recommendedMovies = recommendedMovies;
-    }
-
-    public String getCriticDescription() {
-        return criticDescription;
-    }
-
-    public void setCriticDescription(String criticDescription) {
-        this.criticDescription = criticDescription;
-    }
-
-    public String getWebsiteUrl() {
-        return websiteUrl;
-    }
-
-    public void setWebsiteUrl(String websiteUrl) {
-        this.websiteUrl = websiteUrl;
     }
 
     public List<Review> getReviewedMovie() {
@@ -96,9 +77,5 @@ public class Critic extends User{
                 newCritic.email : this.email;
         this.dob = newCritic.dob != null?
                 newCritic.dob : this.dob;
-        this.criticDescription = newCritic.criticDescription != null?
-                newCritic.criticDescription : this.criticDescription;
-        this.websiteUrl = newCritic.websiteUrl != null?
-                newCritic.websiteUrl : this.websiteUrl;
     }
 }
