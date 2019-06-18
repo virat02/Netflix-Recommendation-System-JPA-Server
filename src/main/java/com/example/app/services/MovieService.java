@@ -42,7 +42,7 @@ public class MovieService {
         urlString += (lang != null) ? ("&language=" + lang) : "";
         urlString += (region != null) ? ("&region=" + region) : "";
         urlString += (query != null) ? ("&query=" + query) : "";
-        urlString += (query != null) ? ("&page=" + pageNo) : "";
+        urlString += (pageNo != null) ? ("&page=" + pageNo) : "";
 
         return getMovies(urlString);
     }
