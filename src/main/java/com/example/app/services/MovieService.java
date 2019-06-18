@@ -2,6 +2,7 @@ package com.example.app.services;
 
 import com.example.app.models.Movie;
 import com.example.app.models.MovieSearchResult;
+import com.example.app.types.GetMovieType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,12 +25,34 @@ public class MovieService {
     private MovieService() { }
 
     /**
-     * Search TMDb for movies with the given query string
-     * @param query a String
-     * @return a list of MovieSearchResults
+     *
+     * @param getMovieType
+     * @param lang
+     * @param region
+     * @param query
+     * @param pageNo
+     * @return
      */
-    public static List<MovieSearchResult> searchMovies(String query) {
-        String urlString = apiBaseUri + "search/movie?api_key=" + apiKey + "&query=" + query;
+    public static List<MovieSearchResult> getMovies(GetMovieType getMovieType, String lang, String region, String query,
+                                                    String pageNo) {
+        String urlString = getMovieType.equals(GetMovieType.SEARCH) ?
+                (apiBaseUri + getMovieType.toString() + "/movie?api_key=" + apiKey) :
+                (apiBaseUri + "movie/" + getMovieType.toString() + "?api_key=" + apiKey);
+
+        urlString += (lang != null) ? ("&language=" + lang) : "";
+        urlString += (region != null) ? ("&region=" + region) : "";
+        urlString += (query != null) ? ("&query=" + query) : "";
+        urlString += (query != null) ? ("&page=" + pageNo) : "";
+
+        return getMovies(urlString);
+    }
+
+    /**
+     *
+     * @param urlString
+     * @return
+     */
+    private static List<MovieSearchResult> getMovies(String urlString) {
         List<MovieSearchResult> searchResults = new ArrayList<>();
 
         HttpURLConnection conn = null;
