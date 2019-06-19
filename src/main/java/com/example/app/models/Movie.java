@@ -10,7 +10,6 @@ public class Movie {
 
     @Id
     private Long movieId;
-
     private String title;
     private String imdbId;
     private String posterUrl;
