@@ -25,13 +25,11 @@ public class MovieController {
     public MovieController(MovieRepository movieRepository, FanRepository fanRepository,
                            CriticRepository criticRepository, ReviewRepository reviewRepository,
                            ActorRepository actorRepository) {
-
         this.movieRepository = movieRepository;
         this.fanRepository = fanRepository;
         this.criticRepository = criticRepository;
         this.reviewRepository = reviewRepository;
         this.actorRepository = actorRepository;
-
     }
 
     /**
@@ -60,7 +58,8 @@ public class MovieController {
     List<MovieSearchResult> getTopRatedMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                               @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                               @RequestParam(value = "page", defaultValue = "1") String pageNo) {
-        return MovieService.getMovies(GetMovieType.TOP_RATED, lang, region, null, pageNo, null);
+        return MovieService.getMovies(GetMovieType.TOP_RATED, lang, region, null, pageNo, null)
+                .stream().limit(3).collect(Collectors.toList());
     }
 
     /**
