@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
@@ -71,7 +72,8 @@ public class MovieController {
     List<MovieSearchResult> getNowPlayingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                                 @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                                 @RequestParam(value = "page", defaultValue = "1") String pageNo) {
-        return MovieService.getMovies(GetMovieType.NOW_PLAYING, lang, region,null, pageNo);
+        return MovieService.getMovies(GetMovieType.NOW_PLAYING, lang, region,null, pageNo)
+                .stream().limit(3).collect(Collectors.toList());
     }
 
     /**
@@ -83,7 +85,8 @@ public class MovieController {
     List<MovieSearchResult> getPopularMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                              @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                              @RequestParam(value = "page", defaultValue = "1") String pageNo) {
-        return MovieService.getMovies(GetMovieType.POPULAR, lang, region,null, pageNo);
+        return MovieService.getMovies(GetMovieType.POPULAR, lang, region,null, pageNo)
+                .stream().limit(3).collect(Collectors.toList());
     }
 
     /**
@@ -95,7 +98,8 @@ public class MovieController {
     List<MovieSearchResult> getUpcomingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                               @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                               @RequestParam(value = "page", defaultValue = "1") String pageNo) {
-        return MovieService.getMovies(GetMovieType.UPCOMING, lang, region,null, pageNo);
+        return MovieService.getMovies(GetMovieType.UPCOMING, lang, region,null, pageNo)
+                .stream().limit(3).collect(Collectors.toList());
     }
 
     /**
