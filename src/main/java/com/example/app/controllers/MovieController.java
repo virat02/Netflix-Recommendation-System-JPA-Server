@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
 public class MovieController {
 
     private MovieRepository movieRepository;
@@ -24,11 +25,13 @@ public class MovieController {
     public MovieController(MovieRepository movieRepository, FanRepository fanRepository,
                            CriticRepository criticRepository, ReviewRepository reviewRepository,
                            ActorRepository actorRepository) {
+
         this.movieRepository = movieRepository;
         this.fanRepository = fanRepository;
         this.criticRepository = criticRepository;
         this.reviewRepository = reviewRepository;
         this.actorRepository = actorRepository;
+
     }
 
     /**
@@ -69,7 +72,8 @@ public class MovieController {
     List<MovieSearchResult> getNowPlayingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                                 @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                                 @RequestParam(value = "page", defaultValue = "1") String pageNo) {
-        return MovieService.getMovies(GetMovieType.NOW_PLAYING, lang, region,null, pageNo, null);
+        return MovieService.getMovies(GetMovieType.NOW_PLAYING, lang, region, null, pageNo, null)
+                .stream().limit(3).collect(Collectors.toList());
     }
 
     /**
@@ -81,7 +85,8 @@ public class MovieController {
     List<MovieSearchResult> getPopularMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                              @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                              @RequestParam(value = "page", defaultValue = "1") String pageNo) {
-        return MovieService.getMovies(GetMovieType.POPULAR, lang, region,null, pageNo, null);
+        return MovieService.getMovies(GetMovieType.POPULAR, lang, region, null, pageNo, null)
+                .stream().limit(3).collect(Collectors.toList());
     }
 
     /**
@@ -93,7 +98,8 @@ public class MovieController {
     List<MovieSearchResult> getUpcomingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                               @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                               @RequestParam(value = "page", defaultValue = "1") String pageNo) {
-        return MovieService.getMovies(GetMovieType.UPCOMING, lang, region,null, pageNo, null);
+        return MovieService.getMovies(GetMovieType.UPCOMING, lang, region, null, pageNo, null)
+                .stream().limit(3).collect(Collectors.toList());
     }
 
     /**
