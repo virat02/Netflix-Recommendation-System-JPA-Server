@@ -34,11 +34,21 @@ public class MovieService {
      * @return
      */
     public static List<MovieSearchResult> getMovies(GetMovieType getMovieType, String lang, String region, String query,
-                                                    String pageNo) {
-        String urlString = getMovieType.equals(GetMovieType.SEARCH) ?
-                (apiBaseUri + getMovieType.toString() + "/movie?api_key=" + apiKey) :
-                (apiBaseUri + "movie/" + getMovieType.toString() + "?api_key=" + apiKey);
+                                                    String pageNo, Long movieId) {
+        String urlString = apiBaseUri;
 
+        switch(getMovieType) {
+            case SEARCH:
+                urlString += getMovieType.toString() + "/movie";
+                break;
+            case SIMILAR:
+                urlString += "movie/" + movieId + "/" + getMovieType.toString();
+                break;
+            default:
+                urlString += "movie/" + getMovieType.toString();
+        }
+
+        urlString += "?api_key=" + apiKey;
         urlString += (lang != null) ? ("&language=" + lang) : "";
         urlString += (region != null) ? ("&region=" + region) : "";
         urlString += (query != null) ? ("&query=" + query) : "";
