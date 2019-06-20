@@ -38,7 +38,7 @@ public class MovieController {
      * @return a list of MovieSearchResults
      */
     @GetMapping("/api/search/movies")
-    List<MovieSearchResult> searchMovies(@RequestParam("query") String query) {
+    public List<MovieSearchResult> searchMovies(@RequestParam("query") String query) {
         List<MovieSearchResult> result = new ArrayList<>();
 
         if(query.length() != 0) {
@@ -55,7 +55,7 @@ public class MovieController {
      * @return a list of MovieSearchResults
      */
     @GetMapping("/api/movies/top_rated")
-    List<MovieSearchResult> getTopRatedMovies(@RequestParam(value = "region", defaultValue = "us") String region,
+    public List<MovieSearchResult> getTopRatedMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                               @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                               @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         return MovieService.getMovies(GetMovieType.TOP_RATED, lang, region, null, pageNo, null)
@@ -68,7 +68,7 @@ public class MovieController {
      * @return a list of MovieSearchResults
      */
     @GetMapping("/api/movies/now_playing")
-    List<MovieSearchResult> getNowPlayingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
+    public List<MovieSearchResult> getNowPlayingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                                 @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                                 @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         return MovieService.getMovies(GetMovieType.NOW_PLAYING, lang, region, null, pageNo, null)
@@ -81,7 +81,7 @@ public class MovieController {
      * @return a list of MovieSearchResults
      */
     @GetMapping("/api/movies/popular")
-    List<MovieSearchResult> getPopularMovies(@RequestParam(value = "region", defaultValue = "us") String region,
+    public List<MovieSearchResult> getPopularMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                              @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                              @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         return MovieService.getMovies(GetMovieType.POPULAR, lang, region, null, pageNo, null)
@@ -94,11 +94,47 @@ public class MovieController {
      * @return a list of MovieSearchResults
      */
     @GetMapping("/api/movies/upcoming")
-    List<MovieSearchResult> getUpcomingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
+    public List<MovieSearchResult> getUpcomingMovies(@RequestParam(value = "region", defaultValue = "us") String region,
                                               @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                               @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         return MovieService.getMovies(GetMovieType.UPCOMING, lang, region, null, pageNo, null)
                 .stream().limit(3).collect(Collectors.toList());
+    }
+
+    /**
+     * Get list of recommended movies for given Fan
+     * @param id fan id
+     * @return list of Movies
+     */
+    @GetMapping("/api/fan/{id}/movies/recommended")
+    public List<Movie> getMoviesRecommendedForFan(@PathVariable("id") Long id) {
+        List<Movie> result = new ArrayList<>();
+        Fan fan = fanRepository.findById(id).orElse(null);
+
+        if(fan != null) {
+            List<Critic> criticsFollowed = fan.getCriticsFollowed();
+            List<Fan> fansFollowed = fan.getFollowingFans();
+
+            // Add movies recommended by followed critics if not already liked
+            for(Critic c: criticsFollowed) {
+                for(Movie recommendedMovie: c.getRecommendedMovies()) {
+                    if(!fan.getLikesMovies().contains(recommendedMovie)) {
+                        result.add(recommendedMovie);
+                    }
+                }
+            }
+
+            // Add movies liked by followed fans if not already liked
+            for(Fan f: fansFollowed) {
+                for(Movie likedMovie: f.getLikesMovies()) {
+                    if(!fan.getLikesMovies().contains(likedMovie)) {
+                        result.add(likedMovie);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
