@@ -1,7 +1,6 @@
 package com.example.app.services;
 
 import com.example.app.models.Movie;
-import com.example.app.models.MovieSearchResult;
 import com.example.app.types.GetMovieType;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,7 +32,7 @@ public class MovieService {
      * @param pageNo
      * @return
      */
-    public static List<MovieSearchResult> getMovies(GetMovieType getMovieType, String lang, String region, String query,
+    public static List<Movie> getMovies(GetMovieType getMovieType, String lang, String region, String query,
                                                     String pageNo, Long movieId) {
         String urlString = apiBaseUri;
 
@@ -62,8 +61,8 @@ public class MovieService {
      * @param urlString
      * @return
      */
-    private static List<MovieSearchResult> getMovies(String urlString) {
-        List<MovieSearchResult> searchResults = new ArrayList<>();
+    private static List<Movie> getMovies(String urlString) {
+        List<Movie> searchResults = new ArrayList<>();
 
         HttpURLConnection conn = null;
         try {
@@ -85,11 +84,18 @@ public class MovieService {
                 JSONArray results = responseJson.getJSONArray("results");
 
                 for(Object movie : results) {
-                    Integer id = ((JSONObject) movie).getInt("id");
+                    Long id = new Long(((JSONObject) movie).getInt("id"));
                     String title = ((JSONObject) movie).getString("title");
+//                    String imdbId = ((JSONObject) movie).getString("imdb_id");
                     String posterUrl = imageServerPath + ((JSONObject) movie).getString("poster_path");
+                    String overview = ((JSONObject) movie).getString("overview");
+//                    Long runtime = ((JSONObject) movie).getLong("runtime");
+                    String releaseDate = ((JSONObject) movie).getString("release_date");
+//                    Long revenue = ((JSONObject) movie).getLong("revenue");
+//                    String releaseStatus = ((JSONObject) movie).getString("status");
 
-                    searchResults.add(new MovieSearchResult(id, title, posterUrl));
+                    searchResults.add(new Movie(id, title, null, posterUrl, overview, null, releaseDate, null,
+                            null));
                 }
             }
         } catch(Exception e) {
