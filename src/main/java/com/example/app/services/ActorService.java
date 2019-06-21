@@ -74,8 +74,9 @@ public class ActorService {
                                 releaseDate, null, null));
                     }
 
-                    searchResults.add(new Actor(actorId, actorName, null, null, null, null,
-                            actorPopularity, profilePicture, null, movies));
+//                    searchResults.add(new Actor(actorId, actorName, null, null, null, null,
+//                            actorPopularity, profilePicture, null, movies));
+                    searchResults.add(findActorById(actorId));
                 }
             }
         } catch(Exception e) {
