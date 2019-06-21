@@ -81,7 +81,7 @@ public class CriticController extends Utils {
         }
     }
 
-    @GetMapping("/api/follow/critic/{username}/fanfollowing")
+    @GetMapping("/api/follow/critic/{username}/followedby")
     public List<Fan> listOfFansFollowing(
             @PathVariable("username") String username) {
         if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
