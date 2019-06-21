@@ -118,7 +118,7 @@ public class CriticController extends Utils {
         return null;
     }
 
-    @GetMapping("/api/critic/show/reviews/{username}")
+    @GetMapping("/api/review/critic/{username}/reviewedmovies")
     public List<Review> listOfReviewsGiven(
             @PathVariable("username") String username){
         if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()){
