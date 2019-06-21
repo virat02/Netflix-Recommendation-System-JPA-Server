@@ -30,6 +30,11 @@ public class ActorController extends Utils {
                                     @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                     @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         List<Actor> result = ActorService.searchActors(query, lang, region, pageNo);
+
+        for(Actor a : result) {
+            actorRepository.save(a);
+        }
+
         return result;
     }
 

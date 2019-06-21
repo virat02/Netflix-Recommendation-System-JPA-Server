@@ -53,8 +53,8 @@ public class ActorService {
 
                     Long actorId = actorJsonObj.has("id") ? new Long(actorJsonObj.getInt("id")) : null;
                     String actorName = actorJsonObj.has("name") ? actorJsonObj.getString("name") : null;
-                    String profilePicture = imageServerPath +
-                            (actorJsonObj.has("profile_path") ? actorJsonObj.getString("profile_path") : null);
+                    String profilePicture = actorJsonObj.has("profile_path") ?
+                            imageServerPath + actorJsonObj.getString("profile_path") : null;
                     String actorPopularity = "" +
                             (actorJsonObj.has("popularity") ? actorJsonObj.getFloat("popularity") : null);
                     JSONArray knownFor = actorJsonObj.has("known_for") ? actorJsonObj.getJSONArray("known_for") : null;
@@ -65,8 +65,8 @@ public class ActorService {
 
                         Long movieId = actorJsonObj.has("id") ? new Long(movieJsonObj.getInt("id")) : null;
                         String title = actorJsonObj.has("title") ? movieJsonObj.getString("title") : null;
-                        String posterUrl = imageServerPath +
-                                (actorJsonObj.has("poster_path") ? movieJsonObj.getString("poster_path"): null);
+                        String posterUrl = actorJsonObj.has("poster_path") ?
+                                imageServerPath + movieJsonObj.getString("poster_path"): null;
                         String overview = actorJsonObj.has("overview") ? movieJsonObj.getString("overview") : null;
                         String releaseDate = actorJsonObj.has("release_date") ? movieJsonObj.getString("release_date") : null;
 
