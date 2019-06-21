@@ -5,6 +5,7 @@ import com.example.app.models.Fan;
 import com.example.app.models.Movie;
 import com.example.app.repositories.ActorRepository;
 import com.example.app.repositories.FanRepository;
+import com.example.app.services.ActorService;
 import com.example.app.services.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,15 @@ public class ActorController extends Utils {
     public ActorController(ActorRepository actorRepository, FanRepository fanRepository) {
         this.actorRepository = actorRepository;
         this.fanRepository = fanRepository;
+    }
+
+    @GetMapping("/api/search/actors")
+    public List<Actor> searchActors(@RequestParam("query") String query,
+                                    @RequestParam(value = "region", defaultValue = "us") String region,
+                                    @RequestParam(value = "lang", defaultValue = "en-US") String lang,
+                                    @RequestParam(value = "page", defaultValue = "1") String pageNo) {
+        List<Actor> result = ActorService.searchActors(query, lang, region, pageNo);
+        return result;
     }
 
     @PostMapping("/api/actor")
