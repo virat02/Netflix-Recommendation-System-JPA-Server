@@ -70,8 +70,10 @@ public class ActorService {
                                 releaseDate, null, null));
                     }
 
-                    searchResults.add(new Actor(actorId, actorName, null, null, null, null,
-                            actorPopularity, profilePicture, null, movies));
+                    if(!profilePicture.contains("null")) {
+                        searchResults.add(new Actor(actorId, actorName, null, null, null, null,
+                                actorPopularity, profilePicture, null, null, movies));
+                    }
                 }
             }
         } catch(Exception e) {
@@ -114,8 +116,15 @@ public class ActorService {
                 String biography = "" + getJsonObjectValue(responseJson, "biography");
                 String popularity = "" + getJsonObjectValue(responseJson, "popularity");
                 String profilePicture = imageServerPath + getJsonObjectValue(responseJson, "profile_path");
+                String wikilink = "https://wikipedia.org/wiki/";
 
-                actor = new Actor(actorId, actorName, dob, dod, imdbId, biography, popularity, profilePicture,
+                for(String n : actorName.split(" ")) {
+                    wikilink += n + "_";
+                }
+
+                wikilink = wikilink.substring(0, wikilink.length() - 1);
+
+                actor = new Actor(actorId, actorName, dob, dod, imdbId, biography, popularity, profilePicture, wikilink,
                         null, null);
             }
         } catch(Exception e) {

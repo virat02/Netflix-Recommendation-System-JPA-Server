@@ -19,6 +19,7 @@ public class Actor {
     private String biography;
     private String actorPopularity;
     private String profilePicture;
+    private String wikilink;
 
     @ManyToMany(mappedBy="actorsFollowed", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -29,7 +30,7 @@ public class Actor {
     private List<Movie> listOfMovies;
 
     public Actor(long actorId, String actorName, String dob, String dod, String imdbId, String biography,
-                 String actorPopularity, String profilePicture, List<Fan> fansFollowingActor, List<Movie> listOfMovies) {
+                 String actorPopularity, String profilePicture, String wikilink, List<Fan> fansFollowingActor, List<Movie> listOfMovies) {
         this.actorId = actorId;
         this.actorName = actorName;
         this.dob = dob;
@@ -38,6 +39,7 @@ public class Actor {
         this.biography = biography;
         this.actorPopularity = actorPopularity;
         this.profilePicture = profilePicture;
+        this.wikilink = wikilink;
         this.fansFollowingActor = fansFollowingActor;
         this.listOfMovies = listOfMovies;
     }
@@ -125,6 +127,10 @@ public class Actor {
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
+
+    public String getWikilink() { return wikilink; }
+
+    public void setWikilink(String wikilink) { this.wikilink = wikilink; }
 
     public void followedBy(Fan fan) {
         this.fansFollowingActor.add(fan);
