@@ -51,32 +51,27 @@ public class ActorService {
                 for(Object actor : results) {
                     JSONObject actorJsonObj = (JSONObject) actor;
 
-                    Long actorId = actorJsonObj.has("id") ? new Long(actorJsonObj.getInt("id")) : null;
-                    String actorName = actorJsonObj.has("name") ? actorJsonObj.getString("name") : null;
-                    String profilePicture = actorJsonObj.has("profile_path") ?
-                            imageServerPath + actorJsonObj.getString("profile_path") : null;
-                    String actorPopularity = "" +
-                            (actorJsonObj.has("popularity") ? actorJsonObj.getFloat("popularity") : null);
-                    JSONArray knownFor = actorJsonObj.has("known_for") ? actorJsonObj.getJSONArray("known_for") : null;
+                    Long actorId = new Long((Integer) getJsonObjectValue(actorJsonObj, "id"));
+                    String actorName = "" + getJsonObjectValue(actorJsonObj, "name");
+                    String profilePicture = imageServerPath + getJsonObjectValue(actorJsonObj, "profile_path");
+                    String actorPopularity = "" + getJsonObjectValue(actorJsonObj, "popularity");
+                    JSONArray knownFor = (JSONArray) getJsonObjectValue(actorJsonObj, "known_for");
                     List<Movie> movies = new ArrayList<>();
 
                     for(Object movie : knownFor) {
                         JSONObject movieJsonObj = (JSONObject) movie;
-
-                        Long movieId = actorJsonObj.has("id") ? new Long(movieJsonObj.getInt("id")) : null;
-                        String title = actorJsonObj.has("title") ? movieJsonObj.getString("title") : null;
-                        String posterUrl = actorJsonObj.has("poster_path") ?
-                                imageServerPath + movieJsonObj.getString("poster_path"): null;
-                        String overview = actorJsonObj.has("overview") ? movieJsonObj.getString("overview") : null;
-                        String releaseDate = actorJsonObj.has("release_date") ? movieJsonObj.getString("release_date") : null;
+                        Long movieId = new Long((Integer) getJsonObjectValue(movieJsonObj, "id"));
+                        String title = "" + getJsonObjectValue(movieJsonObj, "title");
+                        String posterUrl = imageServerPath + getJsonObjectValue(movieJsonObj, "poster_path");
+                        String overview = "" + getJsonObjectValue(movieJsonObj, "overview");
+                        String releaseDate = "" + getJsonObjectValue(movieJsonObj, "release_date");
 
                         movies.add(new Movie(movieId, title, null, posterUrl, overview, null,
                                 releaseDate, null, null));
                     }
 
-//                    searchResults.add(new Actor(actorId, actorName, null, null, null, null,
-//                            actorPopularity, profilePicture, null, movies));
-                    searchResults.add(findActorById(actorId));
+                    searchResults.add(new Actor(actorId, actorName, null, null, null, null,
+                            actorPopularity, profilePicture, null, movies));
                 }
             }
         } catch(Exception e) {
@@ -111,15 +106,14 @@ public class ActorService {
                 sc.close();
 
                 JSONObject responseJson = new JSONObject(responseString.toString());
-                Long actorId = responseJson.has("id") ? new Long(responseJson.getInt("id")) : null;
-                String actorName = responseJson.has("name") ? responseJson.getString("name") : null;
-                String dob = responseJson.has("birthday") ? "" + responseJson.get("birthday") : null;
-                String dod = responseJson.has("deathday") ? "" + responseJson.get("deathday") : null;
-                String imdbId = responseJson.has("imdb_id") ? responseJson.getString("imdb_id") : null;
-                String biography = responseJson.has("biography") ? responseJson.getString("biography") : null;
-                String popularity = responseJson.has("popularity") ? ("" + responseJson.getFloat("popularity")) : null;
-                String profilePicture = responseJson.has("profile_path") ?
-                        (imageServerPath + responseJson.getString("profile_path")) : null;
+                Long actorId = new Long((Integer) getJsonObjectValue(responseJson, "id"));
+                String actorName = "" + getJsonObjectValue(responseJson, "name");
+                String dob = "" + getJsonObjectValue(responseJson, "birthday");
+                String dod = "" + getJsonObjectValue(responseJson, "deathday");
+                String imdbId = "" + getJsonObjectValue(responseJson, "imdb_id");
+                String biography = "" + getJsonObjectValue(responseJson, "biography");
+                String popularity = "" + getJsonObjectValue(responseJson, "popularity");
+                String profilePicture = imageServerPath + getJsonObjectValue(responseJson, "profile_path");
 
                 actor = new Actor(actorId, actorName, dob, dod, imdbId, biography, popularity, profilePicture,
                         null, null);
@@ -132,6 +126,14 @@ public class ActorService {
             }
         }
         return actor;
+    }
+
+    private static Object getJsonObjectValue(JSONObject jsonObject, String key) {
+        Object value = null;
+        if(jsonObject.has(key) && !jsonObject.isNull(key)) {
+            value = jsonObject.get(key);
+        }
+        return value;
     }
 
 }
