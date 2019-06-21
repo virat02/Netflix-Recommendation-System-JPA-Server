@@ -86,16 +86,12 @@ public class MovieService {
                 for(Object movie : results) {
                     Long id = new Long(((JSONObject) movie).getInt("id"));
                     String title = ((JSONObject) movie).getString("title");
-//                    String imdbId = ((JSONObject) movie).getString("imdb_id");
                     String posterUrl = imageServerPath + ((JSONObject) movie).getString("poster_path");
                     String overview = ((JSONObject) movie).getString("overview");
-//                    Long runtime = ((JSONObject) movie).getLong("runtime");
                     String releaseDate = ((JSONObject) movie).getString("release_date");
-//                    Long revenue = ((JSONObject) movie).getLong("revenue");
-//                    String releaseStatus = ((JSONObject) movie).getString("status");
 
-                    searchResults.add(new Movie(id, title, null, posterUrl, overview, null, releaseDate, null,
-                            null));
+                    searchResults.add(new Movie(id, title, null, posterUrl, overview, null, releaseDate,
+                            null, null));
                 }
             }
         } catch(Exception e) {
