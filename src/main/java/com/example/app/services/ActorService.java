@@ -89,4 +89,48 @@ public class ActorService {
         return searchResults;
     }
 
+    public static Actor findActorById(Long id) {
+        String urlString = apiBaseUri + "person/" + id + "?api_key=" + apiKey;
+        Actor actor = null;
+
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL(urlString);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+
+            if(conn.getResponseCode() == 200) {
+                StringBuilder responseString = new StringBuilder();
+                Scanner sc = new Scanner(url.openStream());
+
+                while(sc.hasNext()) {
+                    responseString.append(sc.nextLine());
+                }
+                sc.close();
+
+                JSONObject responseJson = new JSONObject(responseString.toString());
+                Long actorId = responseJson.has("id") ? new Long(responseJson.getInt("id")) : null;
+                String actorName = responseJson.has("name") ? responseJson.getString("name") : null;
+                String dob = responseJson.has("birthday") ? "" + responseJson.get("birthday") : null;
+                String dod = responseJson.has("deathday") ? "" + responseJson.get("deathday") : null;
+                String imdbId = responseJson.has("imdb_id") ? responseJson.getString("imdb_id") : null;
+                String biography = responseJson.has("biography") ? responseJson.getString("biography") : null;
+                String popularity = responseJson.has("popularity") ? ("" + responseJson.getFloat("popularity")) : null;
+                String profilePicture = responseJson.has("profile_path") ?
+                        (imageServerPath + responseJson.getString("profile_path")) : null;
+
+                actor = new Actor(actorId, actorName, dob, dod, imdbId, biography, popularity, profilePicture,
+                        null, null);
+            }
+        } catch(Exception e) {
+            System.out.println(e.toString());
+        } finally {
+            if(conn != null) {
+                conn.disconnect();
+            }
+        }
+        return actor;
+    }
+
 }

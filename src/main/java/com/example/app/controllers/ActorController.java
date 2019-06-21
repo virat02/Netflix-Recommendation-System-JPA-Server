@@ -50,10 +50,13 @@ public class ActorController extends Utils {
 
     @GetMapping("/api/actor/{actorId}")
     public Actor findActorById(@PathVariable(name = "actorId") long actorId) {
-        if(actorRepository.findById(actorId).isPresent()){
-            return actorRepository.findById(actorId).get();
-        }
-        return null;
+        actorRepository.save(ActorService.findActorById(actorId));
+
+//        if(actorRepository.findById(actorId).isPresent()) {
+//            return actorRepository.findById(actorId).get();
+//        }
+//        return null;
+        return actorRepository.findActorById(actorId).orElse(null);
     }
 
     @PostMapping("/api/follow/actor/{actorId}/fan/{username}")
