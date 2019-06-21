@@ -28,6 +28,20 @@ public class Actor {
     @JsonIgnore
     private List<Movie> listOfMovies;
 
+    public Actor(long actorId, String actorName, String dob, String dod, String imdbId, String biography,
+                 String actorPopularity, String profilePicture, List<Fan> fansFollowingActor, List<Movie> listOfMovies) {
+        this.actorId = actorId;
+        this.actorName = actorName;
+        this.dob = dob;
+        this.dod = dod;
+        this.imdbId = imdbId;
+        this.biography = biography;
+        this.actorPopularity = actorPopularity;
+        this.profilePicture = profilePicture;
+        this.fansFollowingActor = fansFollowingActor;
+        this.listOfMovies = listOfMovies;
+    }
+
     public List<Fan> getFansFollowingActor() {
         return fansFollowingActor;
     }
