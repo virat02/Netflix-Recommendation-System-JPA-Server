@@ -21,6 +21,7 @@ public class CriticController extends Utils {
     private CriticRepository criticRepository;
     private MovieRepository movieRepository;
     private FanRepository fanRepository;
+    private ReviewRepository reviewRepository;
 
     @Autowired
     public CriticController(CriticRepository criticRepository, MovieRepository movieRepository,
@@ -28,6 +29,7 @@ public class CriticController extends Utils {
         this.criticRepository = criticRepository;
         this.movieRepository = movieRepository;
         this.fanRepository = fanRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @PostMapping("/api/register/critic")
@@ -163,7 +165,7 @@ public class CriticController extends Utils {
         return result;
     }
 
-    @PostMapping("/api/remove/critic/{username1}/fan/{username2}")
+    @DeleteMapping("/api/remove/critic/{username1}/fan/{username2}")
     public void deleteFans(
             @PathVariable("username1") String username1,
             @PathVariable("username2") String username2){
@@ -177,7 +179,7 @@ public class CriticController extends Utils {
         }
     }
 
-    @PostMapping("/api/delete/recommend/critic/{criticName}/movie/{movieId}")
+    @DeleteMapping("/api/recommend/critic/{criticName}/movie/{movieId}")
     public void deleteRecommendMovie(
             @PathVariable("criticName") String criticName,
             @PathVariable("movieId") long movieId){
@@ -189,5 +191,14 @@ public class CriticController extends Utils {
             movie.getRecommendedBy().remove(critic);
             criticRepository.save(critic);
         }
+    }
+
+    @DeleteMapping("/api/review/critic/{criticName}/movie/{movieId}")
+    public void deleteReview(@PathVariable("criticName") String username,
+                             @PathVariable("movieId") Long movieId) {
+        Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
+        Movie movie = movieRepository.findById(movieId).get();
+        critic.getReviewedMovie().remove(movie);
+        criticRepository.save(critic);
     }
 }
