@@ -81,7 +81,7 @@ public class CriticController extends Utils {
 //        }
 //    }
 
-    @PostMapping("/api/reviews/critic/{username}/movie/{movieId}/")
+    @PostMapping("/api/review/critic/{username}/movie/{movieId}/")
     public void reviewMovie(@PathVariable("username") String username,
                             @PathVariable("movieId") Long movieId,
                             @RequestBody Review review) {
