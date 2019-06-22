@@ -6,7 +6,9 @@ public class ReviewJson {
     private String review;
     private Rating rating;
     private Critic critic;
-    private Movie rmovie;
+    private Long movieId;
+    private String title;
+    private String posterUrl;
 
     public long getReviewId() {
         return reviewId;
@@ -40,12 +42,28 @@ public class ReviewJson {
         this.critic = critic;
     }
 
-    public Movie getRmovie() {
-        return rmovie;
+    public Long getMovieId() {
+        return movieId;
     }
 
-    public void setRmovie(Movie rmovie) {
-        this.rmovie = rmovie;
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
     }
 
 }
