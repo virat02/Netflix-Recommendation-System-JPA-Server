@@ -225,7 +225,7 @@ public class FanController extends Utils {
         return null;
     }
 
-    @PostMapping("/api/delete/like/fan/{username}/movie/{movieId}")
+    @PostMapping("/api/like/fan/{username}/movie/{movieId}")
     public Fan undoLike(
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId){
