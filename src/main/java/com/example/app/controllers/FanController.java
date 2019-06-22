@@ -265,6 +265,20 @@ public class FanController extends Utils {
         }
     }
 
+    @PostMapping("/api/remove/fan1/{username1}/fan2/{username2}")
+    public void unfollowFanFollowedBy(
+            @PathVariable("username1") String username1,
+            @PathVariable("username2") String username2){
+        if(fanRepository.findById(fanRepository.findFanIdByUsername(username1)).isPresent()
+                && fanRepository.findById(fanRepository.findFanIdByUsername(username2)).isPresent()){
+            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(username1)).get();
+            Fan fan1 = fanRepository.findById(fanRepository.findFanIdByUsername(username2)).get();
+            fan.getFollowedByFans().remove(fan1);
+            fan1.getFollowingFans().remove(fan);
+            fanRepository.save(fan);
+        }
+    }
+
     @DeleteMapping("/api/delete/actor/fan/{fanName}/actor/{actorId}")
     public void deleteActorFollowed(
             @PathVariable("fanName") String fanName,

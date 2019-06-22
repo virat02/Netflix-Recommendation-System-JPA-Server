@@ -22,7 +22,6 @@ public class CriticController extends Utils {
 
     private CriticRepository criticRepository;
     private MovieRepository movieRepository;
-    private ReviewRepository reviewRepository;
     private FanRepository fanRepository;
 
     @Autowired
@@ -30,7 +29,6 @@ public class CriticController extends Utils {
                             ReviewRepository reviewRepository, FanRepository fanRepository) {
         this.criticRepository = criticRepository;
         this.movieRepository = movieRepository;
-        this.reviewRepository = reviewRepository;
         this.fanRepository = fanRepository;
     }
 
@@ -81,13 +79,14 @@ public class CriticController extends Utils {
 //        }
 //    }
 
-    @PostMapping("/api/review/critic/{username}/movie/{movieId}/")
+    @PostMapping("/api/review/critic/{username}/movie/{movieId}")
     public void reviewMovie(@PathVariable("username") String username,
                             @PathVariable("movieId") Long movieId,
                             @RequestBody Review review) {
-        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
+        if(movieRepository.findById(movieId).isPresent()
+                && criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
             Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
-            Movie movie = movieRepository.findById(movieId).orElse(null);
+            Movie movie = movieRepository.findById(movieId).get();
             review.setCritic(critic);
             review.setRmovie(movie);
             critic.reviews(review);
@@ -142,7 +141,7 @@ public class CriticController extends Utils {
         return null;
     }
 
-    @PostMapping("/api/delete/unfollow/critic/{username1}/fan/{username2}")
+    @PostMapping("/api/remove/critic/{username1}/fan/{username2}")
     public void deleteFans(
             @PathVariable("username1") String username1,
             @PathVariable("username2") String username2){
