@@ -197,7 +197,7 @@ public class FanController extends Utils {
         return null;
     }
 
-    @PostMapping("/api/delete/unfollow/fan/{username}/actor/{actorId}")
+    @PostMapping("/api/unfollow/fan/{username}/actor/{actorId}")
     public Fan unfollowActor(
             @PathVariable("username") String username,
             @PathVariable("actorId") long actorId){
@@ -225,7 +225,7 @@ public class FanController extends Utils {
         return null;
     }
     
-    @DeleteMapping("/api/like/fan/{username}/movie/{movieId}")
+    @PostMapping("/api/unlike/fan/{username}/movie/{movieId}")
     public Fan undoLike(
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId){
@@ -275,34 +275,6 @@ public class FanController extends Utils {
             Fan fan1 = fanRepository.findById(fanRepository.findFanIdByUsername(username2)).get();
             fan.getFollowedByFans().remove(fan1);
             fan1.getFollowingFans().remove(fan);
-            fanRepository.save(fan);
-        }
-    }
-
-    @DeleteMapping("/api/delete/actor/fan/{fanName}/actor/{actorId}")
-    public void deleteActorFollowed(
-            @PathVariable("fanName") String fanName,
-            @PathVariable("actorId") long actorId){
-        if (fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).isPresent()
-                && actorRepository.findById(actorId).isPresent()){
-            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).get();
-            Actor actor = actorRepository.findById(actorId).get();
-            fan.getActorsFollowed().remove(actor);
-            actor.getFansFollowingActor().remove(fan);
-            fanRepository.save(fan);
-        }
-    }
-
-    @DeleteMapping("/api/delete/like/fan/{fanName}/movie/{movieId}")
-    public void deleteMovieLiked(
-            @PathVariable("fanName") String fanName,
-            @PathVariable("movieId") long movieId){
-        if (fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).isPresent()
-                && movieRepository.findById(movieId).isPresent()){
-            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).get();
-            Movie movie = movieRepository.findById(movieId).get();
-            fan.getLikesMovies().remove(movie);
-            movie.getLikedByFans().remove(fan);
             fanRepository.save(fan);
         }
     }

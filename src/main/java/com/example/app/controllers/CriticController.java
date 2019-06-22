@@ -4,7 +4,6 @@ import com.example.app.models.*;
 import com.example.app.repositories.CriticRepository;
 import com.example.app.repositories.FanRepository;
 import com.example.app.repositories.MovieRepository;
-import com.example.app.repositories.ReviewRepository;
 import com.example.app.services.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,15 +20,13 @@ public class CriticController extends Utils {
     private CriticRepository criticRepository;
     private MovieRepository movieRepository;
     private FanRepository fanRepository;
-    private ReviewRepository reviewRepository;
 
     @Autowired
     public CriticController(CriticRepository criticRepository, MovieRepository movieRepository,
-                            ReviewRepository reviewRepository, FanRepository fanRepository) {
+                            FanRepository fanRepository) {
         this.criticRepository = criticRepository;
         this.movieRepository = movieRepository;
         this.fanRepository = fanRepository;
-        this.reviewRepository = reviewRepository;
     }
 
     @PostMapping("/api/register/critic")
@@ -50,7 +47,7 @@ public class CriticController extends Utils {
             @RequestParam(name = "password", required = false) String password) {
         if (username != null && password != null)
             return (List<Critic>) criticRepository.findCriticByCredentials(username, password);
-        return (List<Critic>) criticRepository.findAll();
+        return criticRepository.findAll();
     }
 
     @PostMapping("/api/recommend/critic/{username}/movie/{movieId}")
@@ -65,19 +62,6 @@ public class CriticController extends Utils {
             criticRepository.save(critic);
         }
     }
-
-//    @PostMapping("/api/reviews/critic/{username}/review/{reviewId}")
-//    public void reviewMovie(
-//            @PathVariable("username") String username,
-//            @PathVariable("reviewId") long reviewId) {
-//        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()
-//                && reviewRepository.findById(reviewId).isPresent()) {
-//            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
-//            Review review = reviewRepository.findById(reviewId).get();
-//            critic.reviews(review);
-//            criticRepository.save(critic);
-//        }
-//    }
 
     @PostMapping("/api/review/critic/{username}/movie/{movieId}")
     public void reviewMovie(@PathVariable("username") String username,
@@ -131,16 +115,6 @@ public class CriticController extends Utils {
         return null;
     }
 
-//    @GetMapping("/api/review/critic/{username}/reviewedmovies")
-//    public List<Review> listOfReviewsGiven(
-//            @PathVariable("username") String username){
-//        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
-//            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
-//            return critic.getReviewedMovie();
-//        }
-//        return null;
-//    }
-
     @GetMapping("/api/review/critic/{username}/reviewedmovies")
     @ResponseBody
     public List<ReviewJson> listOfReviewsGiven(@PathVariable("username") String username){
@@ -179,8 +153,8 @@ public class CriticController extends Utils {
         }
     }
 
-    @DeleteMapping("/api/recommend/critic/{criticName}/movie/{movieId}")
-    public void deleteRecommendMovie(
+    @PostMapping("/api/unrecommend/critic/{criticName}/movie/{movieId}")
+    public void undoRecommendMovie(
             @PathVariable("criticName") String criticName,
             @PathVariable("movieId") long movieId){
         if (criticRepository.findById(criticRepository.findCriticIdByUsername(criticName)).isPresent()
