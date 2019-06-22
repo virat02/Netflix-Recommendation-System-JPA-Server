@@ -266,4 +266,32 @@ public class FanController extends Utils {
         }
         return null;
     }
+
+    @DeleteMapping("/api/delete/actor/fan/{fanName}/actor/{actorId}")
+    public void deleteActorFollowed(
+            @PathVariable("fanName") String fanName,
+            @PathVariable("actorId") long actorId){
+        if (fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).isPresent()
+                && actorRepository.findById(actorId).isPresent()){
+            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).get();
+            Actor actor = actorRepository.findById(actorId).get();
+            fan.getActorsFollowed().remove(actor);
+            actor.getFansFollowingActor().remove(fan);
+            fanRepository.save(fan);
+        }
+    }
+
+    @DeleteMapping("/api/delete/like/fan/{fanName}/movie/{movieId}")
+    public void deleteMovieLiked(
+            @PathVariable("fanName") String fanName,
+            @PathVariable("movieId") long movieId){
+        if (fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).isPresent()
+                && movieRepository.findById(movieId).isPresent()){
+            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).get();
+            Movie movie = movieRepository.findById(movieId).get();
+            fan.getLikesMovies().remove(movie);
+            movie.getLikedByFans().remove(fan);
+            fanRepository.save(fan);
+        }
+    }
 }
