@@ -6,7 +6,7 @@ public class ReviewJson {
     private String review;
     private Rating rating;
     private Critic critic;
-    private Long movieId;
+    private Long id;
     private String title;
     private String posterUrl;
 
@@ -42,12 +42,12 @@ public class ReviewJson {
         this.critic = critic;
     }
 
-    public Long getMovieId() {
-        return movieId;
+    public Long getId() {
+        return id;
     }
 
-    public void setMovieId(Long movieId) {
-        this.movieId = movieId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
