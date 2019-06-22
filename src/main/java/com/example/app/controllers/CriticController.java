@@ -1,19 +1,18 @@
 package com.example.app.controllers;
 
-import com.example.app.models.Critic;
-import com.example.app.models.Fan;
-import com.example.app.models.Movie;
-import com.example.app.models.Review;
+import com.example.app.models.*;
 import com.example.app.repositories.CriticRepository;
 import com.example.app.repositories.FanRepository;
 import com.example.app.repositories.MovieRepository;
 import com.example.app.repositories.ReviewRepository;
 import com.example.app.services.Utils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -131,14 +130,36 @@ public class CriticController extends Utils {
         return null;
     }
 
+//    @GetMapping("/api/review/critic/{username}/reviewedmovies")
+//    public List<Review> listOfReviewsGiven(
+//            @PathVariable("username") String username){
+//        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
+//            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
+//            return critic.getReviewedMovie();
+//        }
+//        return null;
+//    }
+
     @GetMapping("/api/review/critic/{username}/reviewedmovies")
-    public List<Review> listOfReviewsGiven(
-            @PathVariable("username") String username){
-        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()){
+    @ResponseBody
+    public List<ReviewJson> listOfReviewsGiven(@PathVariable("username") String username){
+        List<ReviewJson> result = new ArrayList<>();
+
+        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
             Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
-            return critic.getReviewedMovie();
+            List<Review> reviews = critic.getReviewedMovie();
+
+            for(Review r : reviews) {
+                ReviewJson reviewJson = new ReviewJson();
+                reviewJson.setReviewId(r.getReviewId());
+                reviewJson.setReview(r.getReview());
+                reviewJson.setRating(r.getRating());
+                reviewJson.setRmovie(r.getRmovie());
+                result.add(reviewJson);
+            }
         }
-        return null;
+
+        return result;
     }
 
     @PostMapping("/api/remove/critic/{username1}/fan/{username2}")
