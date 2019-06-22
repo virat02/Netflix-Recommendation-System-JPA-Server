@@ -95,19 +95,6 @@ public class FanController extends Utils {
         }
     }
 
-    @PostMapping("api/follow/fan/{FanUsername}/critic/{CriticUsername}")
-    public void fanFollowsCritic(
-            @PathVariable("FanUsername") String fan_username,
-            @PathVariable("CriticUsername") String critic_username){
-        if(criticRepository.findById(criticRepository.findCriticIdByUsername(critic_username)).isPresent()
-                && fanRepository.findById(fanRepository.findFanIdByUsername(fan_username)).isPresent()) {
-            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(critic_username)).get();
-            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(fan_username)).get();
-            fan.followsCritic(critic);
-            fanRepository.save(fan);
-        }
-    }
-
     @GetMapping("api/follow/fan/{username}/actorfollowed")
     public List<Actor> listOfActorFollowed(
             @PathVariable("username") String username){
@@ -146,6 +133,19 @@ public class FanController extends Utils {
             return fan.getDislikesMovies();
         }
         return null;
+    }
+
+    @PostMapping("api/follow/fan/{FanUsername}/critic/{CriticUsername}")
+    public void fanFollowsCritic(
+            @PathVariable("FanUsername") String fan_username,
+            @PathVariable("CriticUsername") String critic_username){
+        if(criticRepository.findById(criticRepository.findCriticIdByUsername(critic_username)).isPresent()
+                && fanRepository.findById(fanRepository.findFanIdByUsername(fan_username)).isPresent()) {
+            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(critic_username)).get();
+            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(fan_username)).get();
+            fan.followsCritic(critic);
+            fanRepository.save(fan);
+        }
     }
 
     @PostMapping("/api/follow/fan1/{username1}/fan2/{username2}")
@@ -239,8 +239,8 @@ public class FanController extends Utils {
         return null;
     }
 
-    @PostMapping("/api/delete/unfollow/fan/{username}/critic/{username1}")
-    public Fan unfollowCritic(
+    @PostMapping("/api/unfollow/fan/{username}/critic/{username1}")
+    public void unfollowCritic(
             @PathVariable("username") String username,
             @PathVariable("username1") String username1){
         if(fanRepository.findById(fanRepository.findFanIdByUsername(username)).isPresent()
@@ -248,13 +248,12 @@ public class FanController extends Utils {
             Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(username)).get();
             Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username1)).get();
             fan.getCriticsFollowed().remove(critic);
-            return fanRepository.save(fan);
+            fanRepository.save(fan);
         }
-        return null;
     }
 
-    @PostMapping("/api/delete/following/fanfollowing/{username1}/fanfollowed/{username2}")
-    public Fan unfollowFan(
+    @PostMapping("/api/unfollow/fan1/{username1}/fan2/{username2}")
+    public void unfollowFan(
             @PathVariable("username1") String username1,
             @PathVariable("username2") String username2){
         if(fanRepository.findById(fanRepository.findFanIdByUsername(username1)).isPresent()
@@ -262,9 +261,8 @@ public class FanController extends Utils {
             Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(username1)).get();
             Fan fan1 = fanRepository.findById(fanRepository.findFanIdByUsername(username2)).get();
             fan.getFollowingFans().remove(fan1);
-            return fanRepository.save(fan);
+            fanRepository.save(fan);
         }
-        return null;
     }
 
     @DeleteMapping("/api/delete/actor/fan/{fanName}/actor/{actorId}")
