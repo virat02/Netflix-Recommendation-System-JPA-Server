@@ -142,7 +142,7 @@ public class MovieService {
                 Long runtime = getJsonObjectValue(responseJson, "runtime") != null ?
                         new Long((Integer) getJsonObjectValue(responseJson, "runtime")): null;
                 String releaseDate = "" + getJsonObjectValue(responseJson, "release_date");
-                Long revenue = (Long) getJsonObjectValue(responseJson, "revenue");
+                Long revenue = Long.parseLong("" + getJsonObjectValue(responseJson, "revenue"));
                 String releaseStatus = "" + getJsonObjectValue(responseJson, "status");
 
                 movie = new Movie(id, title, imdbId, posterUrl, overview, runtime, releaseDate, revenue, releaseStatus);
