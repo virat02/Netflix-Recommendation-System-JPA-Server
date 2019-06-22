@@ -265,7 +265,7 @@ public class FanController extends Utils {
         }
     }
 
-    @PostMapping("/api/remove/fan1/{username1}/fan2/{username2}")
+    @DeleteMapping("/api/fan1/{username1}/fan2/{username2}")
     public void unfollowFanFollowedBy(
             @PathVariable("username1") String username1,
             @PathVariable("username2") String username2){

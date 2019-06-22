@@ -165,7 +165,7 @@ public class CriticController extends Utils {
         return result;
     }
 
-    @DeleteMapping("/api/remove/critic/{username1}/fan/{username2}")
+    @DeleteMapping("/api/critic/{username1}/fan/{username2}")
     public void deleteFans(
             @PathVariable("username1") String username1,
             @PathVariable("username2") String username2){
