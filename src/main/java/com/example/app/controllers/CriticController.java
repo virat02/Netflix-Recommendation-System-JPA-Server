@@ -6,7 +6,6 @@ import com.example.app.repositories.FanRepository;
 import com.example.app.repositories.MovieRepository;
 import com.example.app.repositories.ReviewRepository;
 import com.example.app.services.Utils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
@@ -154,7 +153,7 @@ public class CriticController extends Utils {
                 reviewJson.setReviewId(r.getReviewId());
                 reviewJson.setReview(r.getReview());
                 reviewJson.setRating(r.getRating());
-                reviewJson.setMovieId(r.getRmovie().getId());
+                reviewJson.setId(r.getRmovie().getId());
                 reviewJson.setTitle(r.getRmovie().getTitle());
                 reviewJson.setPosterUrl(r.getRmovie().getPosterUrl());
                 result.add(reviewJson);
