@@ -84,14 +84,18 @@ public class MovieService {
                 JSONArray results = responseJson.getJSONArray("results");
 
                 for(Object movie : results) {
-                    Long id = new Long(((JSONObject) movie).getInt("id"));
-                    String title = ((JSONObject) movie).getString("title");
-                    String posterUrl = imageServerPath + ((JSONObject) movie).getString("poster_path");
-                    String overview = ((JSONObject) movie).getString("overview");
-                    String releaseDate = ((JSONObject) movie).getString("release_date");
+                    JSONObject movieJsonObj = (JSONObject) movie;
 
-                    searchResults.add(new Movie(id, title, null, posterUrl, overview, null, releaseDate,
-                            null, null));
+                    Long id = new Long((Integer) getJsonObjectValue(movieJsonObj, "id"));
+                    String title = "" + getJsonObjectValue(movieJsonObj, "title");
+                    String posterUrl = imageServerPath + getJsonObjectValue(movieJsonObj, "poster_path");
+                    String overview = "" + getJsonObjectValue(movieJsonObj, "overview");
+                    String releaseDate = "" + getJsonObjectValue(movieJsonObj, "release_date");
+
+                    if(!posterUrl.contains("null")) {
+                        searchResults.add(new Movie(id, title, null, posterUrl, overview, null, releaseDate,
+                                null, null));
+                    }
                 }
             }
         } catch(Exception e) {
@@ -131,14 +135,16 @@ public class MovieService {
                 sc.close();
 
                 JSONObject responseJson = new JSONObject(responseString.toString());
-                String title = responseJson.getString("title");
-                String imdbId = responseJson.getString("imdb_id");
-                String posterUrl = imageServerPath + responseJson.getString("poster_path");
-                String overview = responseJson.getString("overview");
-                Long runtime = responseJson.getLong("runtime");
-                String releaseDate = responseJson.getString("release_date");
-                Long revenue = responseJson.getLong("revenue");
-                String releaseStatus = responseJson.getString("status");
+                String title = "" + getJsonObjectValue(responseJson, "title");
+                String imdbId = "" + getJsonObjectValue(responseJson, "imdb_id");
+                String posterUrl = imageServerPath + getJsonObjectValue(responseJson, "poster_path");
+                String overview = "" + getJsonObjectValue(responseJson, "overview");
+                Long runtime = getJsonObjectValue(responseJson, "runtime") != null ?
+                        new Long((Integer) getJsonObjectValue(responseJson, "runtime")): null;
+                String releaseDate = "" + getJsonObjectValue(responseJson, "release_date");
+                Long revenue = getJsonObjectValue(responseJson, "revenue") != null ?
+                        new Long((Integer) getJsonObjectValue(responseJson, "revenue")): null;
+                String releaseStatus = "" + getJsonObjectValue(responseJson, "status");
 
                 movie = new Movie(id, title, imdbId, posterUrl, overview, runtime, releaseDate, revenue, releaseStatus);
             }
@@ -150,6 +156,14 @@ public class MovieService {
             }
         }
         return movie;
+    }
+
+    private static Object getJsonObjectValue(JSONObject jsonObject, String key) {
+        Object value = null;
+        if(jsonObject.has(key) && !jsonObject.isNull(key)) {
+            value = jsonObject.get(key);
+        }
+        return value;
     }
 
 }
