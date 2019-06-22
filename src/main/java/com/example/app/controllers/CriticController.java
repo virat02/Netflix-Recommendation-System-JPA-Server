@@ -154,7 +154,9 @@ public class CriticController extends Utils {
                 reviewJson.setReviewId(r.getReviewId());
                 reviewJson.setReview(r.getReview());
                 reviewJson.setRating(r.getRating());
-                reviewJson.setRmovie(r.getRmovie());
+                reviewJson.setMovieId(r.getRmovie().getId());
+                reviewJson.setTitle(r.getRmovie().getTitle());
+                reviewJson.setPosterUrl(r.getRmovie().getPosterUrl());
                 result.add(reviewJson);
             }
         }
