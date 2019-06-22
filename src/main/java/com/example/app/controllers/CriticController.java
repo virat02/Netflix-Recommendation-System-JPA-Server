@@ -128,7 +128,7 @@ public class CriticController extends Utils {
         return null;
     }
 
-    @DeleteMapping("/api/delete/unfollow/critic/{username1}/fan/{username2}")
+    @PostMapping("/api/delete/unfollow/critic/{username1}/fan/{username2}")
     public void deleteFans(
             @PathVariable("username1") String username1,
             @PathVariable("username2") String username2){
@@ -142,7 +142,7 @@ public class CriticController extends Utils {
         }
     }
 
-    @DeleteMapping("/api/delete/recommend/critic/{criticName}/movie/{movieId}")
+    @PostMapping("/api/delete/recommend/critic/{criticName}/movie/{movieId}")
     public void deleteRecommendMovie(
             @PathVariable("criticName") String criticName,
             @PathVariable("movieId") long movieId){

@@ -51,6 +51,11 @@ public class ActorController extends Utils {
     @GetMapping("/api/actor/{actorId}")
     public Actor findActorById(@PathVariable(name = "actorId") long actorId) {
         actorRepository.save(ActorService.findActorById(actorId));
+
+//        if(actorRepository.findById(actorId).isPresent()) {
+//            return actorRepository.findById(actorId).get();
+//        }
+//        return null;
         return actorRepository.findActorById(actorId).orElse(null);
     }
 
@@ -76,6 +81,8 @@ public class ActorController extends Utils {
         }
         return null;
     }
+
+//TODO: Search an actor
 
     @GetMapping("/api/actor/{actorId}/moviesActed")
     public List<Movie> getMoviesActed (@PathVariable("actorId") long actorId){
