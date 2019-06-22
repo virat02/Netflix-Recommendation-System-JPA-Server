@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
@@ -21,9 +22,9 @@ public class UserController {
     }
 
     @GetMapping("/api/user")
-    public Iterable<User> findAllUsers(@RequestParam(name = "username", required = false) String username) {
+    public List<User> findAllUsers(@RequestParam(name = "username", required = false) String username) {
         if (username != null)
-            return userRepository.findUserByUsername(username);
+            return (List<User>) userRepository.findUserByUsername(username);
         return userRepository.findAll();
     }
 

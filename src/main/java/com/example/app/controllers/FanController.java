@@ -197,7 +197,7 @@ public class FanController extends Utils {
         return null;
     }
 
-    @PostMapping("/api/delete/unfollow/fan/{username}/actor/{actorId}")
+    @PostMapping("/api/unfollow/fan/{username}/actor/{actorId}")
     public Fan unfollowActor(
             @PathVariable("username") String username,
             @PathVariable("actorId") long actorId){
@@ -265,5 +265,19 @@ public class FanController extends Utils {
             return fanRepository.save(fan);
         }
         return null;
+    }
+
+    @DeleteMapping("/api/delete/actor/fan/{fanName}/actor/{actorId}")
+    public void deleteActorFollowed(
+            @PathVariable("fanName") String fanName,
+            @PathVariable("actorId") long actorId){
+        if (fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).isPresent()
+                && actorRepository.findById(actorId).isPresent()){
+            Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(fanName)).get();
+            Actor actor = actorRepository.findById(actorId).get();
+            fan.getActorsFollowed().remove(actor);
+            actor.getFansFollowingActor().remove(fan);
+            fanRepository.save(fan);
+        }
     }
 }
