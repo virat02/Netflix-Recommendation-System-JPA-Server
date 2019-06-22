@@ -68,14 +68,28 @@ public class CriticController extends Utils {
         }
     }
 
-    @PostMapping("/api/reviews/critic/{username}/review/{reviewId}")
-    public void reviewMovie(
-            @PathVariable("username") String username,
-            @PathVariable("reviewId") long reviewId) {
-        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()
-                && reviewRepository.findById(reviewId).isPresent()) {
+//    @PostMapping("/api/reviews/critic/{username}/review/{reviewId}")
+//    public void reviewMovie(
+//            @PathVariable("username") String username,
+//            @PathVariable("reviewId") long reviewId) {
+//        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()
+//                && reviewRepository.findById(reviewId).isPresent()) {
+//            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
+//            Review review = reviewRepository.findById(reviewId).get();
+//            critic.reviews(review);
+//            criticRepository.save(critic);
+//        }
+//    }
+
+    @PostMapping("/api/review/critic/{username}/movie/{movieId}/")
+    public void reviewMovie(@PathVariable("username") String username,
+                            @PathVariable("movieId") Long movieId,
+                            @RequestBody Review review) {
+        if(criticRepository.findById(criticRepository.findCriticIdByUsername(username)).isPresent()) {
             Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(username)).get();
-            Review review = reviewRepository.findById(reviewId).get();
+            Movie movie = movieRepository.findById(movieId).orElse(null);
+            review.setCritic(critic);
+            review.setRmovie(movie);
             critic.reviews(review);
             criticRepository.save(critic);
         }
