@@ -13,12 +13,8 @@ import java.util.Scanner;
 
 public class MovieService {
 
-    // TODO: Read from application.properties
-//    @Value("${tmdb.api.key}")
     private static String apiKey = "5d837b926bca6fa72fb4cf1b287a1bfa";
-//    @Value("${tmdb.api.base.uri}")
     private static String apiBaseUri = "https://api.themoviedb.org/3/";
-//    @Value("${tmdb.image.server}")
     private static String imageServerPath = "https://image.tmdb.org/t/p/w500";
 
     private MovieService() { }

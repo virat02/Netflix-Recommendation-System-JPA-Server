@@ -9,27 +9,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "http://netflix-recommendation-client", maxAge = 3600, allowCredentials = "true")
 public class MovieController {
 
     private MovieRepository movieRepository;
     private FanRepository fanRepository;
     private CriticRepository criticRepository;
     private ReviewRepository reviewRepository;
-    private ActorRepository actorRepository;
 
     @Autowired
     public MovieController(MovieRepository movieRepository, FanRepository fanRepository,
-                           CriticRepository criticRepository, ReviewRepository reviewRepository,
-                           ActorRepository actorRepository) {
+                           CriticRepository criticRepository, ReviewRepository reviewRepository) {
         this.movieRepository = movieRepository;
         this.fanRepository = fanRepository;
         this.criticRepository = criticRepository;
         this.reviewRepository = reviewRepository;
-        this.actorRepository = actorRepository;
     }
 
     /**
@@ -63,7 +59,6 @@ public class MovieController {
                                               @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                               @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         List<Movie> result = MovieService.getMovies(GetMovieType.TOP_RATED, lang, region, null, pageNo, null);
-                //.stream().limit(3).collect(Collectors.toList());
 
         for(Movie m : result) {
             movieRepository.save(m);
@@ -82,7 +77,6 @@ public class MovieController {
                                                 @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                                 @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         List<Movie> result = MovieService.getMovies(GetMovieType.NOW_PLAYING, lang, region, null, pageNo, null);
-                //.stream().limit(3).collect(Collectors.toList());
 
         for(Movie m : result) {
             movieRepository.save(m);
@@ -101,7 +95,6 @@ public class MovieController {
                                              @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                              @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         List<Movie> result = MovieService.getMovies(GetMovieType.POPULAR, lang, region, null, pageNo, null);
-                //.stream().limit(3).collect(Collectors.toList());
 
         for(Movie m : result) {
             movieRepository.save(m);
@@ -120,7 +113,6 @@ public class MovieController {
                                               @RequestParam(value = "lang", defaultValue = "en-US") String lang,
                                               @RequestParam(value = "page", defaultValue = "1") String pageNo) {
         List<Movie> result = MovieService.getMovies(GetMovieType.UPCOMING, lang, region, null, pageNo, null);
-                //.stream().limit(3).collect(Collectors.toList());
 
         for(Movie m : result) {
             movieRepository.save(m);
