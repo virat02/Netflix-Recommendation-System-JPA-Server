@@ -45,4 +45,9 @@ public class UserController {
     public void logout(HttpSession session) {
         session.invalidate();
     }
+
+    @DeleteMapping("api/user/{userId}")
+    public void deleteUser(@PathVariable("userId") Long userId) {
+        userRepository.delete(userRepository.findById(userId).get());
+    }
 }
