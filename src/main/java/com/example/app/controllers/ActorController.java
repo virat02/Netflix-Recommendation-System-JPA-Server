@@ -51,11 +51,6 @@ public class ActorController extends Utils {
     @GetMapping("/api/actor/{actorId}")
     public Actor findActorById(@PathVariable(name = "actorId") long actorId) {
         actorRepository.save(ActorService.findActorById(actorId));
-
-//        if(actorRepository.findById(actorId).isPresent()) {
-//            return actorRepository.findById(actorId).get();
-//        }
-//        return null;
         return actorRepository.findActorById(actorId).orElse(null);
     }
 
@@ -94,7 +89,7 @@ public class ActorController extends Utils {
     }
 
     @GetMapping("/api/check/follow/fan/{username}/actor/{actorId}")
-    public Fan checkIfFanFollowsActor(
+    public Boolean checkIfFanFollowsActor(
             @PathVariable("username") String username,
             @PathVariable("actorId") long actorId) {
         if(actorRepository.findById(actorId).isPresent()
@@ -105,11 +100,11 @@ public class ActorController extends Utils {
 
             if(fansWhoFollowActor.contains(fan))
             {
-                return fan;
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 
 }

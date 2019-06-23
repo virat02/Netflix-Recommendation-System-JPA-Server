@@ -89,7 +89,7 @@ public class CriticController extends Utils {
     }
 
     @GetMapping("/api/check/follow/fan/{fanUsername}/critic/{criticUsername}")
-    public Fan checkIfFanFollowsCritic(
+    public Boolean checkIfFanFollowsCritic(
             @PathVariable("fanUsername") String fanUsername,
             @PathVariable("criticUsername") String criticUsername) {
         if(criticRepository.findById(criticRepository.findCriticIdByUsername(criticUsername)).isPresent() &&
@@ -98,11 +98,11 @@ public class CriticController extends Utils {
             Fan fan = fanRepository.findById(fanRepository.findFanIdByUsername(fanUsername)).get();
             List <Fan> fanlist = critic.getFansFollowingCritics();
             if (fanlist.contains(fan)) {
-                return fan;
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 
     @GetMapping("/api/recommend/critic/{username}/recommendedmovies")

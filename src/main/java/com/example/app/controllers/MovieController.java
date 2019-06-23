@@ -201,7 +201,7 @@ public class MovieController {
     }
 
     @GetMapping("/api/check/like/fan/{username}/movie/{movieId}")
-    public Fan checkIfFanLikesMovie(
+    public Boolean checkIfFanLikesMovie(
             @PathVariable("username") String username,
             @PathVariable("movieId") long movieId) {
         if(movieRepository.findById(movieId).isPresent()
@@ -212,11 +212,11 @@ public class MovieController {
 
             if(fansWhoLike.contains(fan))
             {
-                return fan;
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 
     @PostMapping("/api/dislike/movie/{movieId}/fan/{username}")

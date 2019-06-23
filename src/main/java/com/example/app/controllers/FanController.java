@@ -53,7 +53,7 @@ public class FanController extends Utils {
                                  @RequestParam(name = "password", required = false) String password) {
         if (username != null && password != null)
             return (List<Fan>) fanRepository.findFanByCredential(username, password);
-        return (List<Fan>) fanRepository.findAll();
+        return fanRepository.findAll();
     }
 
     @PostMapping("api/like/fan/{username}/movie/{movieId}")
@@ -162,7 +162,7 @@ public class FanController extends Utils {
     }
 
     @GetMapping("/api/check/follow/fan1/{username1}/fan2/{username2}")
-    public Fan checkIfFanFollowsAnotherFan(
+    public Boolean checkIfFanFollowsAnotherFan(
             @PathVariable("username1") String username1,
             @PathVariable("username2") String username2) {
         if(fanRepository.findById(fanRepository.findFanIdByUsername(username1)).isPresent() &&
@@ -171,11 +171,11 @@ public class FanController extends Utils {
             Fan fan2 = fanRepository.findById(fanRepository.findFanIdByUsername(username2)).get();
             List <Fan> fan2list = fan2.getFollowedByFans();
             if (fan2list.contains(fan1) && !(fan1.getUsername().equals(fan2.getUsername()))) {
-                return fan1;
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 
     @GetMapping("/api/follow/fan/{username}/fansfollowing")
