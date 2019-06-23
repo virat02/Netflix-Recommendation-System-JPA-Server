@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://netflix-recommendation-client", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "https://netflix-recommendation-client.herokuapp.com/", maxAge = 3600, allowCredentials = "true")
 public class CriticController extends Utils {
 
     private CriticRepository criticRepository;

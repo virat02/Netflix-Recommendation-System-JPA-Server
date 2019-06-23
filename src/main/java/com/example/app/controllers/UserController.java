@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@CrossOrigin(origins = "http://netflix-recommendation-client", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "https://netflix-recommendation-client.herokuapp.com/", maxAge = 3600, allowCredentials = "true")
 public class UserController {
 
     private UserRepository userRepository;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "https://netflix-recommendation-client.herokuapp.com/", maxAge = 3600, allowCredentials = "true")
 public class AdminController {
 
     private AdminRepository adminRepository;
@@ -17,20 +17,17 @@ public class AdminController {
     private FanRepository fanRepository;
     private MovieRepository movieRepository;
     private ReviewRepository reviewRepository;
-    private UserRepository userRepository;
 
     @Autowired
     public AdminController(AdminRepository adminRepository, ActorRepository actorRepository,
                            CriticRepository criticRepository, FanRepository fanRepository,
-                           MovieRepository movieRepository, ReviewRepository reviewRepository,
-                           UserRepository userRepository) {
+                           MovieRepository movieRepository, ReviewRepository reviewRepository) {
         this.adminRepository = adminRepository;
         this.actorRepository = actorRepository;
         this.criticRepository = criticRepository;
         this.fanRepository = fanRepository;
         this.movieRepository = movieRepository;
         this.reviewRepository = reviewRepository;
-        this.userRepository = userRepository;
     }
 
     @GetMapping("/api/admin")
