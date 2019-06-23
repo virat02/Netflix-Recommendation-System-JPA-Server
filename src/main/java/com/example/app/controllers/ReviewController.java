@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "https://netflix-recommendation-client.herokuapp.com/",  maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "*",  maxAge = 3600, allowCredentials = "true")
 public class ReviewController {
 
     private ReviewRepository reviewRepository;
