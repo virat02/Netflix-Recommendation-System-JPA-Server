@@ -105,6 +105,23 @@ public class CriticController extends Utils {
         return false;
     }
 
+    @GetMapping("/api/check/recommend/critic/{criticUsername}/movie/{movieId}")
+    public Boolean checkIfCriticRecommendMovie(
+            @PathVariable("criticUsername") String criticUsername,
+            @PathVariable("movieId") Long movieId) {
+        if(criticRepository.findById(criticRepository.findCriticIdByUsername(criticUsername)).isPresent() &&
+                movieRepository.findById(movieId).isPresent()) {
+            Critic critic = criticRepository.findById(criticRepository.findCriticIdByUsername(criticUsername)).get();
+            Movie movie = movieRepository.findById(movieId).get();
+            List <Movie> movies = critic.getRecommendedMovies();
+            if (movies.contains(movie)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @GetMapping("/api/recommend/critic/{username}/recommendedmovies")
     public List<Movie> listOfRecommendedMovies(
             @PathVariable("username") String username){
